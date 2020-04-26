@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 mongoose.connect('mongodb://localhost:27017/athenadb').catch(err => {
     throw err;
@@ -9,6 +10,7 @@ mongoose.connection.on('error', err => {
     throw err;
 });
 
+app.use(cors());
 app.use(express.json());
 app.use('/user', require('./routes/userRouter'));
 app.use('/tasks', require('./routes/tasksRouter'));
