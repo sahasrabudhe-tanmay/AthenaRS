@@ -10,6 +10,7 @@ mongoose.connection.on('error', err => {
 });
 
 app.use(express.json());
+app.use('/user', require('./routes/userRouter'));
 app.use('/tasks', require('./routes/tasksRouter'));
 
 const PORT = process.env.PORT || 5000;
