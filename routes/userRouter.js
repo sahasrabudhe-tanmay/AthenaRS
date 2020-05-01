@@ -57,7 +57,7 @@ router.post('/register', (req, res) => {
                 email: req.body.email,
                 name: req.body.name
             });
-    
+
             User.insertMany([user], (error, users) => {
                 if (error) {
                     console.log(error);
@@ -68,8 +68,21 @@ router.post('/register', (req, res) => {
             })
         }
     });
+});
 
-    
+router.get('/checkUsername/:username', (req, res) => {
+    User.find({
+        username: req.params.username
+    }, (error, existingUser) => {
+        if (error) {
+            console.log(error);
+            res.json(buildFailureResponse('Could not check username availability at this time'));
+        } else if (existingUser && existingUser.length > 0) {
+            res.json(buildFailureResponse('Username is unavailable'));
+        } else {
+            res.json(buildSuccessResponse(null));
+        }
+    });
 });
 
 module.exports = router;
