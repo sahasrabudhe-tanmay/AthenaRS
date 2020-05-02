@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const createJWT = require('../util/authentication').createJWT;
 
-function buildSuccessResponse(user) {
+function buildSuccessResponse(user, token) {
     return {
         responseStatus: {
             status: 'SUCCESS'
         },
-        user: user
+        user: user,
+        token: token
     };
 }
 
@@ -30,7 +32,8 @@ router.post('/login', (req, res) => {
         } else {
             if (user) {
                 if (user.password === req.body.password) {
-                    res.json(buildSuccessResponse(user));
+                    const token = createJWT(user.toObject());
+                    res.json(buildSuccessResponse(user, token));
                 } else {
                     res.json(buildFailureResponse('Invalid login credentials'));
                 }
@@ -63,7 +66,8 @@ router.post('/register', (req, res) => {
                     console.log(error);
                     res.json(buildFailureResponse('Error registering user'));
                 } else {
-                    res.json(buildSuccessResponse(users[0]));
+                    const token = createJWT(users[0].toObject());
+                    res.json(buildSuccessResponse(users[0], token));
                 }
             })
         }
